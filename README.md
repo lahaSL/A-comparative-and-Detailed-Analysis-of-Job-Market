@@ -235,12 +235,51 @@ To regenerate the 5,000 synthetic recruitment records with custom seeds or rules
 python generate_data.py
 ```
 
+### Option D: Run with Docker (Containerized)
+
+You can build and run the entire application using Docker without needing a local Python environment.
+
+#### 1. Quick Launch with Docker Compose (Recommended)
+```bash
+docker compose up --build
+```
+The dashboard will be live at `http://localhost:5000`. To run in the background, add `-d`:
+```bash
+docker compose up -d --build
+```
+To stop the container:
+```bash
+docker compose down
+```
+
+#### 2. Manual Docker Build & Run
+```bash
+# Build the Docker image
+docker build -t hiring-analytics-dashboard:latest .
+
+# Run the container (maps port 5000)
+docker run -d -p 5000:5000 --name hiring_analytics_app hiring-analytics-dashboard:latest
+
+# Check container status
+docker ps
+
+# View container logs
+docker logs -f hiring_analytics_app
+
+# Stop and remove the container
+docker stop hiring_analytics_app && docker rm hiring_analytics_app
+```
+
 ---
 
 ## 📂 Project Architecture & Directory Layout
 
 ```
 Hiring Data Analysis/
+├── Dockerfile                  # Production container definition (Python 3.11 slim, non-root user)
+├── docker-compose.yml          # Single-command container orchestration
+├── .dockerignore               # Optimized Docker build context exclusions
+├── requirements.txt            # Python dependencies (Flask, Scikit-learn, Pandas, Gunicorn)
 ├── app.py                      # Flask REST API server, ML inference & SQLite query engine
 ├── run_gui.py                  # CLI/desktop launcher with automated browser opener
 ├── run_gui.bat                 # Windows one-click desktop batch launcher

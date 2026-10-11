@@ -438,8 +438,9 @@ def export_dataset(dataset):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
+    host = os.environ.get("HOST", "0.0.0.0")
     print(f"\n==================================================================")
     print(f"  HIRING PROCESS ANALYTICS & ML INTELLIGENCE DASHBOARD")
-    print(f"  Server running on http://127.0.0.1:{port}")
+    print(f"  Server running on http://{host}:{port}")
     print(f"==================================================================\n")
-    app.run(host="127.0.0.1", port=port, debug=False)
+    app.run(host=host, port=port, debug=False)
