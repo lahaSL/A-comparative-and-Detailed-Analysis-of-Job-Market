@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiring Intelligence & Talent Analytics Platform</title>
+    <!-- Modern Typography: Google Fonts Outfit & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js & Plugins -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h2>TalentPulse AI</h2>
+                    <span>Hiring Analytics & ML</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="#overview" class="nav-item active" data-tab="overview">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Executive Overview</span>
+                </a>
+                <a href="#funnel" class="nav-item" data-tab="funnel">
+                    <span class="nav-icon">🔻</span>
+                    <span class="nav-label">Funnel & Depts</span>
+                </a>
+                <a href="#compensation" class="nav-item" data-tab="compensation">
+                    <span class="nav-icon">💰</span>
+                    <span class="nav-label">Salary Benchmark</span>
+                </a>
+                <a href="#ml-simulator" class="nav-item" data-tab="ml-simulator">
+                    <span class="nav-icon">🤖</span>
+                    <span class="nav-label">ML Offer Simulator</span>
+                    <span class="badge-pill">AI</span>
+                </a>
+                <a href="#sql-studio" class="nav-item" data-tab="sql-studio">
+                    <span class="nav-icon">⚡</span>
+                    <span class="nav-label">SQL Studio</span>
+                </a>
+                <a href="#candidates" class="nav-item" data-tab="candidates">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-label">Candidate Explorer</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="dataset-meta">
+                    <div class="meta-row">
+                        <span class="meta-label">Total Cohort:</span>
+                        <span class="meta-val" id="sb-total-cohort">5,000 Candidates</span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="meta-label">Timeframe:</span>
+                        <span class="meta-val">2022 – 2024</span>
+                    </div>
+                    <div class="meta-row">
+                        <span class="meta-label">Engine:</span>
+                        <span class="meta-val status-online">● Online (Flask + SQLite)</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header Bar -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 id="page-title">Executive Overview & Insights</h1>
+                    <p class="subtitle" id="page-subtitle">Cross-department recruitment performance, funnel health, and key metrics</p>
+                </div>
+                <div class="header-actions">
+                    <div class="status-chip" id="connection-status">
+                        <span class="status-dot"></span>
+                        <span id="connection-text">Live Sync</span>
+                    </div>
+                    <button class="btn btn-secondary" onclick="exportData('funnel')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Power BI CSV
+                    </button>
+                    <button class="btn btn-primary" onclick="switchTab('ml-simulator')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+                        Simulate Offer
+                    </button>
+                </div>
+            </header>
+
+            <!-- TAB 1: EXECUTIVE OVERVIEW -->
+            <section id="tab-overview" class="tab-pane active">
+                <!-- KPI Metric Grid -->
+                <div class="kpi-grid">
+                    <div class="kpi-card" data-glow="blue">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Total Applications</span>
+                            <span class="kpi-icon">📋</span>
+                        </div>
+                        <div class="kpi-value" id="kpi-apps">5,000</div>
+                        <div class="kpi-footnote">Across 8 Business Units</div>
+                    </div>
+
+                    <div class="kpi-card" data-glow="purple">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Screening Pass Rate</span>
+                            <span class="kpi-icon">🔍</span>
+                        </div>
+                        <div class="kpi-value" id="kpi-screen-rate">63.9%</div>
+                        <div class="kpi-footnote"><span id="kpi-screened-count">3,194</span> Candidates Screened</div>
+                    </div>
+
+                    <div class="kpi-card" data-glow="amber">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Offer Conversion</span>
+                            <span class="kpi-icon">📜</span>
+                        </div>
+                        <div class="kpi-value" id="kpi-offer-rate">25.3%</div>
+                        <div class="kpi-footnote"><span id="kpi-offered-count">1,263</span> Job Offers Extended</div>
+                    </div>
+
+                    <div class="kpi-card" data-glow="rose">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Offer Acceptance</span>
+                            <span class="kpi-icon">🤝</span>
+                        </div>
+                        <div class="kpi-value" id="kpi-accept-rate">48.9%</div>
+                        <div class="kpi-footnote"><span id="kpi-accepted-count">617</span> Offers Accepted</div>
+                    </div>
+
+                    <div class="kpi-card" data-glow="green">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Overall Hire Rate</span>
+                            <span class="kpi-icon">🎯</span>
+                        </div>
+                        <div class="kpi-value" id="kpi-hire-rate">10.8%</div>
+                        <div class="kpi-footnote"><span id="kpi-joined-count">539</span> Total Hires Joined</div>
+                    </div>
+
+                    <div class="kpi-card" data-glow="cyan">
+                        <div class="kpi-header">
+                            <span class="kpi-title">Avg Time-to-Hire</span>
+                            <span class="kpi-icon">⏱️</span>
+                        </div>
+                        <div class="kpi-value" id="kpi-time-hire">43 Days</div>
+                        <div class="kpi-footnote">Product: 40.7d | HR: 47.0d</div>
+                    </div>
+                </div>
+
+                <!-- Strategic Callout Banner -->
+                <div class="callout-card">
+                    <div class="callout-icon">💡</div>
+                    <div class="callout-content">
+                        <h4>Critical Talent Finding: The Offer Acceptance Bottleneck</h4>
+                        <p>While the initial talent pipeline is robust (63.9% screening pass), <strong>51.1% of all job offers are rejected</strong>. Machine Learning feature importance identifies <strong>Salary Discrepancy (Offered vs Expected)</strong> as the overwhelming #1 driver of offer attrition (72.3% model weight). Employee Referrals remain the highest converting channel (12.6% hire rate).</p>
+                    </div>
+                </div>
+
+                <!-- Charts Row 1 -->
+                <div class="charts-grid-2">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-group">
+                                <h3>Recruitment Funnel & Drop-off Rates</h3>
+                                <p>Progressive conversion from Application to Onboarding</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chart-funnel"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-group">
+                                <h3>Department Performance Comparison</h3>
+                                <p>Application volume vs actual hires</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chart-depts"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row 2 -->
+                <div class="charts-grid-2">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-group">
+                                <h3>Sourcing Channel Effectiveness</h3>
+                                <p>Hire rate (%) and total application yield</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chart-sources"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-group">
+                                <h3>Monthly Application & Hiring Pacing</h3>
+                                <p>Application pipeline trajectory (2022–2024)</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chart-timeline"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: FUNNEL & DEPARTMENTS -->
+            <section id="tab-funnel" class="tab-pane">
+                <div class="section-card">
+                    <div class="card-header-flex">
+                        <div>
+                            <h3>Department Breakdown & Benchmarking</h3>
+                            <p>Select department to inspect conversion velocity and turnaround days</p>
+                        </div>
+                        <div class="filter-group">
+                            <label for="dept-select">Department:</label>
+                            <select id="dept-select" class="form-select" onchange="filterDeptData(this.value)">
+                                <option value="all">All Departments</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table" id="table-dept-summary">
+                            <thead>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Applications</th>
+                                    <th>Screened</th>
+                                    <th>Interviewed</th>
+                                    <th>Offered</th>
+                                    <th>Accepted</th>
+                                    <th>Joined</th>
+                                    <th>Hire Rate</th>
+                                    <th>Offer Accept %</th>
+                                    <th>Avg Turnaround</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-depts">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="charts-grid-2" style="margin-top: 1.5rem;">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-group">
+                                <h3>Average Time-to-Hire by Department (Days)</h3>
+                                <p>Benchmark against organizational average (43 days)</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chart-time-dept"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-group">
+                                <h3>Gender Diversity Ratio by Department</h3>
+                                <p>Proportion of Female, Male, and Other candidates</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chart-diversity"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: SALARY BENCHMARK -->
+            <section id="tab-compensation" class="tab-pane">
+                <div class="charts-grid-2">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-group">
+                                <h3>Offered vs Expected Salary by Role Level</h3>
+                                <p>Amounts indicated in ₹ Lakhs per annum</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chart-salary-comp"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-group">
+                                <h3>Experience Bracket vs Hire Rate</h3>
+                                <p>Candidate conversion efficiency across career stages</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chart-experience"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card" style="margin-top: 1.5rem;">
+                    <h3>Role-Level Compensation Gap Analysis</h3>
+                    <p class="mb-4">Quantifying the salary expectations delta that drives offer rejections:</p>
+                    <div class="table-responsive">
+                        <table class="data-table" id="table-salary-gap">
+                            <thead>
+                                <tr>
+                                    <th>Role Level</th>
+                                    <th>Offers Extended</th>
+                                    <th>Avg Offered (₹)</th>
+                                    <th>Avg Expected (₹)</th>
+                                    <th>Salary Deficit (₹)</th>
+                                    <th>Offer/Expect Ratio</th>
+                                    <th>Acceptance Risk Impact</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-salary-gap">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: ML WHAT-IF SIMULATOR -->
+            <section id="tab-ml-simulator" class="tab-pane">
+                <div class="ml-grid">
+                    <!-- Input Simulation Form -->
+                    <div class="simulator-card">
+                        <div class="simulator-header">
+                            <div class="icon-bubble">🧪</div>
+                            <div>
+                                <h3>What-If Offer Acceptance Predictor</h3>
+                                <p>Test candidate parameters against trained Gradient Boosting & Random Forest models</p>
+                            </div>
+                        </div>
+
+                        <form id="ml-sim-form" onsubmit="event.preventDefault(); runPrediction();">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Department</label>
+                                    <select id="sim-dept" class="form-select"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Role Level</label>
+                                    <select id="sim-role" class="form-select"></select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Recruitment Source</label>
+                                    <select id="sim-source" class="form-select"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Education</label>
+                                    <select id="sim-edu" class="form-select"></select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Gender</label>
+                                    <select id="sim-gender" class="form-select">
+                                        <option value="Female">Female</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Experience: <span id="val-exp" class="slider-val">4.5 yrs</span></label>
+                                    <input type="range" id="sim-exp" min="0" max="15" step="0.5" value="4.5"
+                                           oninput="document.getElementById('val-exp').innerText = this.value + ' yrs';">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Interview Score (4.0 – 10.0): <span id="val-score" class="slider-val">7.8 / 10</span></label>
+                                <input type="range" id="sim-score" min="4.0" max="10.0" step="0.1" value="7.8"
+                                       oninput="document.getElementById('val-score').innerText = this.value + ' / 10';">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Expected Salary (₹)</label>
+                                    <input type="number" id="sim-expected-sal" class="form-input" value="1200000" step="25000"
+                                           oninput="updateSalaryRatioPreview();">
+                                </div>
+                                <div class="form-group">
+                                    <label>Offered Salary (₹)</label>
+                                    <input type="number" id="sim-offered-sal" class="form-input" value="1150000" step="25000"
+                                           oninput="updateSalaryRatioPreview();">
+                                </div>
+                            </div>
+
+                            <div class="ratio-preview-bar">
+                                <div class="preview-text">
+                                    <span>Salary Ratio (Offer / Expected):</span>
+                                    <strong id="preview-ratio">0.958</strong>
+                                </div>
+                                <div class="ratio-indicator" id="ratio-indicator">
+                                    <div class="ratio-fill" id="ratio-fill" style="width: 95.8%;"></div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block">
+                                ⚡ Predict Offer Acceptance
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Prediction Result & Recommendations -->
+                    <div class="prediction-results-card">
+                        <div class="results-header">
+                            <h3>AI Decision Intelligence Output</h3>
+                            <span class="badge" id="res-model-badge">GB AUC 0.775 | RF AUC 0.759</span>
+                        </div>
+
+                        <div class="prediction-gauge-box">
+                            <div class="probability-circle" id="prob-circle">
+                                <span class="prob-number" id="res-probability">78.4%</span>
+                                <span class="prob-label">Acceptance Probability</span>
+                            </div>
+                            <div class="risk-badge-box">
+                                <span class="risk-tag risk-low" id="res-risk-tag">LOW ATTRITION RISK</span>
+                                <h4 id="res-outcome-title">Candidate Likely to Accept Offer</h4>
+                            </div>
+                        </div>
+
+                        <div class="ai-recommendation-box">
+                            <div class="rec-icon">🎯</div>
+                            <div class="rec-body">
+                                <h5>AI Strategic Recommendation:</h5>
+                                <p id="res-recommendation">Candidate is in a high-acceptance bracket. The salary offer closely meets candidate expectations (ratio >= 0.95).</p>
+                            </div>
+                        </div>
+
+                        <div class="model-breakdown-box">
+                            <h5>Model Consensus</h5>
+                            <div class="model-row">
+                                <span>Gradient Boosting Classifier (200 trees):</span>
+                                <strong id="res-gb-prob">81.2%</strong>
+                            </div>
+                            <div class="model-row">
+                                <span>Random Forest Classifier (200 trees):</span>
+                                <strong id="res-rf-prob">73.1%</strong>
+                            </div>
+                        </div>
+
+                        <div class="feature-importance-mini">
+                            <h5>Top Acceptance Drivers</h5>
+                            <div class="feature-bar-item">
+                                <div class="fb-label"><span>1. Salary Ratio (Offered/Expected)</span><span>72.3%</span></div>
+                                <div class="fb-track"><div class="fb-bar" style="width: 72.3%;"></div></div>
+                            </div>
+                            <div class="feature-bar-item">
+                                <div class="fb-label"><span>2. Experience (Years)</span><span>8.7%</span></div>
+                                <div class="fb-track"><div class="fb-bar" style="width: 8.7%;"></div></div>
+                            </div>
+                            <div class="feature-bar-item">
+                                <div class="fb-label"><span>3. Interview Score</span><span>8.0%</span></div>
+                                <div class="fb-track"><div class="fb-bar" style="width: 8.0%;"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: SQL STUDIO -->
+            <section id="tab-sql-studio" class="tab-pane">
+                <div class="section-card">
+                    <div class="sql-studio-header">
+                        <div>
+                            <h3>Interactive SQLite Recruitment Console</h3>
+                            <p>Query live SQLite database loaded with all 5,000 candidate records</p>
+                        </div>
+                        <div class="quick-queries">
+                            <span>Preset Queries:</span>
+                            <button class="btn btn-sm btn-outline" onclick="loadSqlPreset('funnel')">Full Funnel</button>
+                            <button class="btn btn-sm btn-outline" onclick="loadSqlPreset('sources')">Source ROI</button>
+                            <button class="btn btn-sm btn-outline" onclick="loadSqlPreset('salary')">Salary Discrepancy</button>
+                            <button class="btn btn-sm btn-outline" onclick="loadSqlPreset('dept_velocity')">Time-to-Hire</button>
+                            <button class="btn btn-sm btn-outline" onclick="loadSqlPreset('rejections')">High-Score Rejections</button>
+                        </div>
+                    </div>
+
+                    <div class="sql-editor-container">
+                        <textarea id="sql-query-input" class="sql-editor" rows="5">SELECT department, COUNT(*) AS applications, SUM(CASE WHEN joined=1 THEN 1 ELSE 0 END) AS hires, ROUND(SUM(CASE WHEN joined=1 THEN 1.0 ELSE 0 END)*100/COUNT(*), 1) AS hire_rate, ROUND(AVG(days_to_hire), 1) AS avg_days FROM hiring GROUP BY department ORDER BY hires DESC;</textarea>
+                        <div class="sql-actions">
+                            <span class="sql-hint">Table: <code>hiring</code> | Columns: candidate_id, department, role_level, source, gender, education, experience_years, screened, interviewed, interview_score, offered, offered_salary, expected_salary, accepted, joined, days_to_hire</span>
+                            <button class="btn btn-primary" onclick="executeSqlQuery()">
+                                ▶ Execute Query
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="sql-status" class="sql-status-bar"></div>
+
+                    <div class="table-responsive sql-table-wrap">
+                        <table class="data-table" id="sql-result-table">
+                            <thead id="sql-thead"></thead>
+                            <tbody id="sql-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 6: CANDIDATE EXPLORER -->
+            <section id="tab-candidates" class="tab-pane">
+                <div class="section-card">
+                    <div class="explorer-filter-bar">
+                        <div class="search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="candidate-search" placeholder="Search Candidate ID, Dept, Role, City..." oninput="debounceCandidateSearch();">
+                        </div>
+
+                        <div class="filter-dropdowns">
+                            <select id="cand-dept-filter" class="form-select" onchange="loadCandidates(1)">
+                                <option value="all">All Departments</option>
+                            </select>
+
+                            <select id="cand-status-filter" class="form-select" onchange="loadCandidates(1)">
+                                <option value="all">All Outcomes</option>
+                                <option value="joined">Joined (Hired)</option>
+                                <option value="offered">Offered</option>
+                                <option value="rejected_offer">Offer Rejected</option>
+                                <option value="screened">Screened</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-secondary" onclick="exportData('dept_stats')">
+                            ⬇ Export View
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table" id="candidates-table">
+                            <thead>
+                                <tr>
+                                    <th>Candidate ID</th>
+                                    <th>App Date</th>
+                                    <th>Department</th>
+                                    <th>Role Level</th>
+                                    <th>Source</th>
+                                    <th>City</th>
+                                    <th>Exp (Yrs)</th>
+                                    <th>Score</th>
+                                    <th>Offered (₹)</th>
+                                    <th>Expected (₹)</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="candidates-tbody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="pagination-bar">
+                        <span id="cand-page-info">Showing candidates</span>
+                        <div class="pagination-controls">
+                            <button class="btn btn-sm btn-outline" id="btn-prev-page" onclick="changeCandidatePage(-1)">Previous</button>
+                            <span class="page-current" id="cand-current-page">1</span>
+                            <button class="btn btn-sm btn-outline" id="btn-next-page" onclick="changeCandidatePage(1)">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Core Javascript Application -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
